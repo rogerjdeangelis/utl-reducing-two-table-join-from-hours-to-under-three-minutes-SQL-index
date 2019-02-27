@@ -10,6 +10,15 @@ Reducing two table join from hours to under three minutes
     https://tinyurl.com/y2coc97v                                                                                             
     https://communities.sas.com/t5/SAS-Programming/Macro-length-of-the-value-of-the-macro-variable-exceeds-maximum/m-p/539042
                                                                                                                          
+    Update: Recent Sage advise from Sigurd to run without the index                  
+                                                                                     
+    Sigurd Hermansen                                                                 
+    hermans1@westat.com                                                              
+                                                                                     
+    NO NEED TO CREATE THE INDEX, THE TIMING IS 1 MINUTE FASTER WITHOUT THE INDEX.    
+    LESS CPU TIME TOO!!                                                              
+                                                                                     
+    See results without index on the end                                             
 
                                                                                                     
     Two tables of 200,00,000 observations                                                           
@@ -145,4 +154,55 @@ Reducing two table join from hours to under three minutes
     NOTE: PROCEDURE SQL used (Total process time):                                                  
           real time           2:50.08                                                               
           cpu time            6:19.09                                                               
-                                                                                                    
+                 
+                 
+    *____  _                     _                                                                       
+    / ___|(_) __ _ _   _ _ __ __| |                                                                      
+    \___ \| |/ _` | | | | '__/ _` |                                                                      
+     ___) | | (_| | |_| | | | (_| |                                                                      
+    |____/|_|\__, |\__,_|_|  \__,_|                                                                      
+             |___/                                                                                       
+    ;                                                                                                    
+         sqxcrta                                                                                         
+              sqxjm                                                                                      
+                  sqxsort                                                                                
+                      sqxsrc( WORK.HAVE2(alias = R) )                                                    
+                  sqxsort                                                                                
+                      sqxsrc( WORK.HAVE1(alias = L) )                                                    
+                                                                                                         
+                                                                                                         
+    However the locality of reference (large bursts of sequential keys) and the internal sort order      
+    may be helping.                                                                                      
+                                                                                                         
+    I have been experimenting with sampling large data to determine locality of                          
+    reference, cardinality and skew to help parallelize tasks.                                           
+    Know you data and outperform Teradata, Exadata, Hadoop...                                            
+                                                                                                         
+    proc sql;                                                                                            
+      drop index key on have1                                                                            
+    ;quit;                                                                                               
+                                                                                                         
+    861   proc sql;                                                                                      
+    862     create                                                                                       
+    863       table want as                                                                              
+    864     select                                                                                       
+    865       l.*                                                                                        
+    866     from                                                                                         
+    867       have1 as l, have2 as r                                                                     
+    868     where                                                                                        
+    869      l.key = r.key                                                                               
+    870   ;                                                                                              
+    NOTE: Table WORK.WANT created, with 1902 rows and 6 columns.                                         
+                                                                                                         
+    870 !  quit;                                                                                         
+    NOTE: PROCEDURE SQL used (Total process time):                                                       
+          real time           2:49.36                                                                    
+          user cpu time       4:48.18                                                                    
+          system cpu time     1:26.40                                                                    
+          memory              4206428.67k                                                                
+          OS Memory           4249244.00k                                                                
+          Timestamp           02/27/2019 01:13:43 PM                                                     
+          Step Count                        444  Switch Count  1                                         
+                                                                                                         
+                                                                                                         
+
