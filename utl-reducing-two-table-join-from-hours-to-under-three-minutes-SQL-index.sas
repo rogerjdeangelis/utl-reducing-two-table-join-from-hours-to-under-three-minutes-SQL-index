@@ -1,4 +1,13 @@
-Reducing two table join from hours to under three minutes                                               
+Reducing two table join from hours to under three minutes    
+
+github                                                                                                                   
+https://tinyurl.com/y58585ao                                                                                             
+https://github.com/rogerjdeangelis/utl-reducing-two-table-join-from-hours-to-under-three-minutes-SQL-index               
+                                                                                                                         
+SAS Forum                                                                                                                
+https://tinyurl.com/y2coc97v                                                                                             
+https://communities.sas.com/t5/SAS-Programming/Macro-length-of-the-value-of-the-macro-variable-exceeds-maximum/m-p/539042
+                                                                                                                         
                                                                                                         
 Two tables of 200,00,000 observations                                                                   
                                                                                                         
